@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { UserServiceModule } from './user-service.module';
 import {Transport , MicroserviceOptions} from "@nestjs/microservices";
 import { join } from 'path';
-
+import { LoggingInterceptor } from '@app/packages';
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(UserServiceModule, {
     transport : Transport.GRPC,
@@ -12,6 +12,7 @@ async function bootstrap() {
       url : "0.0.0.0:3002",
     }
   });
+  app.useGlobalInterceptors(new LoggingInterceptor());
   await app.listen();
 }
 bootstrap();

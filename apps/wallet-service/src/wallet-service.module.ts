@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { WalletServiceController } from './wallet-service.controller';
-import { WalletServiceService } from './wallet-service.service';
+import { WalletService } from './wallet-service.service';
 import { PrismaModule } from '@app/packages';
 import { Transport } from '@nestjs/microservices';
 import { ClientsModule } from '@nestjs/microservices';
 import { join } from 'path';
+import { WalletRepository } from './wallet-repository';
 
 
 @Module({
@@ -23,6 +24,6 @@ import { join } from 'path';
     PrismaModule
 ],
   controllers: [WalletServiceController],
-  providers: [WalletServiceService],
+  providers: [WalletService, WalletRepository],
 })
 export class WalletServiceModule {}

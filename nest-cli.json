@@ -22,7 +22,12 @@
             "include": "../../../libs/packages/src/proto/*.proto",
             "outDir": "./dist/apps/nestjsmicroservices/libs/packages/src/",
             "watchAssets": true
-          }
+          },
+           {
+           "include": "../../../libs/packages/src/generated/**/*",
+           "outDir": "./dist/apps/nestjsmicroservices/libs/packages/src/",  
+           "watchAssets": true
+      }
         ]
       }
     },
@@ -65,7 +70,7 @@
         "tsConfigPath": "apps/wallet-service/tsconfig.app.json",
         "assets": [
           {
-            "include": "../../../libs/packages/proto/*.proto",
+            "include": "../../../libs/packages/src/proto/*.proto",
             "outDir": "./dist/apps/wallet-service/libs/packages/src/",
             "watchAssets": true
           },

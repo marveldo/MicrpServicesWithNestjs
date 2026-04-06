@@ -15,6 +15,15 @@ import { join } from 'path';
       protoPath: join(__dirname, '../../../libs/packages/src/proto/user.proto'),
       url: 'localhost:3002'
     }
+   },
+   {
+      name: "WALLET_PACKAGE",
+      transport: Transport.GRPC,  
+      options: {
+       package: 'wallet',
+        protoPath: join(__dirname, '../../../libs/packages/src/proto/wallet.proto'),
+        url: 'localhost:3001'
+     }
    }
     ])
   ],
