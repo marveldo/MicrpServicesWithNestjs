@@ -20,3 +20,5 @@ export type {
 export * from './types/user-types';
 export * from './types/wallet-types';
 export * from './interceptors/logging.interceptor';  
+export * from './errors/errorformat';
+export type {PrismaTransaction} from './types/prisma-types'

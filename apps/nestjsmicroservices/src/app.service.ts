@@ -3,9 +3,8 @@ import type { ClientGrpc } from '@nestjs/microservices';
 import { USER_SERVICE_NAME , UserServiceClient} from '@app/packages/proto/user.pb';
 import { CreateUserType, CreateWalletType } from '@app/packages';
 import { catchError, Observable } from 'rxjs';
-import { status } from '@grpc/grpc-js';
-import { NotFoundException, ConflictException, BadRequestException, UnauthorizedException, ForbiddenException, ServiceUnavailableException, InternalServerErrorException } from '@nestjs/common';
 import { WalletServiceClient , WALLET_SERVICE_NAME, GetWalletByIdRequest} from '@app/packages/proto/wallet.pb';
+import { handleGrpcError } from '@app/packages';
 
 @Injectable()
 export class AppService implements OnModuleInit {
@@ -25,7 +24,7 @@ export class AppService implements OnModuleInit {
 
     return this.userService.createUser(data).pipe(
        catchError((error) => {
-         this.handleGrpcError(error);
+         handleGrpcError(error);
          throw new Error(`Failed to create user: ${error.message}`);
       })
     )
@@ -35,7 +34,7 @@ export class AppService implements OnModuleInit {
   getUserById(id : number) {
      return this.userService.getUserbyId({id}).pipe(
        catchError((error) => {
-         this.handleGrpcError(error);
+         handleGrpcError(error);
          throw new Error(`Failed to get user: ${error.message}`);
       })
     )
@@ -44,7 +43,7 @@ export class AppService implements OnModuleInit {
  createWallet(data : CreateWalletType) {
     return this.walletService.createWallet(data).pipe(
        catchError((error) => {
-         this.handleGrpcError(error);
+         handleGrpcError(error);
           throw new Error(`Failed to create wallet: ${error.message}`);
       })
     )
@@ -53,30 +52,27 @@ export class AppService implements OnModuleInit {
   getWalletById(data : GetWalletByIdRequest ) {
     return this.walletService.getWalletById(data).pipe(
        catchError((error) => {
-         this.handleGrpcError(error);
+         handleGrpcError(error);
           throw new Error(`Failed to get wallet: ${error.message}`);
       })
     )
   }
 
- handleGrpcError(error: any) {
-  console.error('gRPC Error:', error);
-  switch (error.code) {
-     // Log the full error for debugging
-    case status.NOT_FOUND:
-      throw new NotFoundException(error.message);
-    case status.ALREADY_EXISTS:
-      throw new ConflictException(error.message);
-    case status.INVALID_ARGUMENT:
-      throw new BadRequestException(error.message);
-    case status.UNAUTHENTICATED:
-      throw new UnauthorizedException(error.message);
-    case status.PERMISSION_DENIED:
-      throw new ForbiddenException(error.message);
-    case status.UNAVAILABLE:
-      throw new ServiceUnavailableException('Service is currently unavailable');
-    default:
-      throw new InternalServerErrorException('Something went wrong');
+  creditWallet(data : { userId: number, amount: number }) {
+    return this.walletService.creditWallet({id : data.userId , amount : data.amount}).pipe(
+       catchError((error) => {
+         handleGrpcError(error);
+          throw new Error(`Failed to credit wallet: ${error.message}`);
+      }
+    ))
   }
-}
+  debitWallet(data : { userId: number, amount: number }) {
+    return this.walletService.debitWallet({id : data.userId , amount : data.amount}).pipe(
+       catchError((error) => {
+          handleGrpcError(error);
+          throw new Error(`Failed to debit wallet: ${error.message}`);
+      }
+    ))
+  }
+ 
 }

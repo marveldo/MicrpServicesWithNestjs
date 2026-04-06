@@ -4,7 +4,7 @@ import { GrpcMethod  } from '@nestjs/microservices';
 import { OnModuleInit, Inject } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
 import { UserServiceClient , USER_SERVICE_NAME } from '@app/packages/proto/user.pb';
-import type {CreateWalletRequest, WalletResponse, GetWalletByIdRequest} from '@app/packages'
+import type {CreateWalletRequest, WalletResponse, GetWalletByIdRequest, CreditWalletRequest, DebitWalletRequest} from '@app/packages'
 import { status } from '@grpc/grpc-js';
 import { RpcException } from '@nestjs/microservices';
 import { catchError , lastValueFrom} from 'rxjs';
@@ -62,5 +62,22 @@ export class WalletServiceController implements OnModuleInit {
     }
   }
 
+  @GrpcMethod("WalletService", "CreditWallet")
+  async creditWallet(data : CreditWalletRequest) : Promise<WalletResponse> {
+    try {
+      return await this.walletServiceService.creditWallet({userId : data.id , amount : data.amount});
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @GrpcMethod("WalletService", "DebitWallet")
+  async debitWallet(data : DebitWalletRequest) : Promise<WalletResponse> {
+    try {
+      return await this.walletServiceService.debitWallet({userId : data.id , amount : data.amount});
+    } catch (error) {
+      throw error;
+    }
+  }
   
 }

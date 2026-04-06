@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CreateUserDto} from './dto/user.dto';
-import { CreateWalletDto } from './dto/wallet.dto';
+import { CreateWalletDto, CreditWalletDto, DebitwalletDto } from './dto/wallet.dto';
 import { ValidationPipe } from '@nestjs/common';
 
 @Controller()
@@ -64,4 +64,29 @@ export class AppController {
       throw new Error(`Failed to get wallet: ${error}`);
     }
   }
+
+  @Post('/wallet-credit')
+  creditWallet(
+    @Body(new ValidationPipe) data : CreditWalletDto
+   ) {
+    try {
+      const response = this.appService.creditWallet({userId : data.userId , amount : data.amount});
+      return response
+    }
+    catch (error) {
+      throw new Error(`Failed to credit wallet: ${error}`);
+     }
+  }
+  @Post('/wallet-debit')
+  debitWallet(
+    @Body(new ValidationPipe) data : DebitwalletDto
+   ) {
+    try {
+      const response = this.appService.debitWallet({userId : data.userId , amount : data.amount});
+      return response
+    }
+    catch (error) {
+      throw new Error(`Failed to debit wallet: ${error}`);
+     }
+   }
 }
