@@ -1,98 +1,374 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Microservices — Users & Wallet
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A microservices application built with NestJS, gRPC, Prisma, and pnpm. The system consists of three services: an API Gateway, a User Service, and a Wallet Service.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Architecture
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ pnpm install
+```
+Client Request
+      ↓
+API Gateway (nestjsmicroservices) — port 3000
+      ↓
+gRPC calls
+      ↓
+┌─────────────────┬──────────────────┐
+User Service       Wallet Service
+port 3002          port 3003
+      ↓                  ↓
+   Prisma DB          Prisma DB
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ pnpm run start
+## Tech Stack
 
-# watch mode
-$ pnpm run start:dev
+- **Framework** — NestJS (Monorepo)
+- **Transport** — gRPC
+- **ORM** — Prisma
+- **Package Manager** — pnpm
+- **Environment** — dotenvx
+- **Language** — TypeScript
 
-# production mode
-$ pnpm run start:prod
+---
+
+## Project Structure
+
+```
+nestjsmicroservices/
+├── apps/
+│   ├── nestjsmicroservices/     # API Gateway
+│   ├── user-service/            # User microservice
+│   └── wallet-service/          # Wallet microservice
+├── libs/
+│   └── packages/
+│       └── src/
+│           ├── proto/           # Protobuf definitions
+│           ├── generated/       # Prisma generated client
+│           ├── prisma/          # Prisma service & module
+│           └── index.ts         # Shared exports
+├── prisma/
+│   └── schema.prisma
+├── nest-cli.json
+├── .env
+└── package.json
 ```
 
-## Run tests
+---
+
+## Prerequisites
+
+- Node.js >= 18
+- pnpm installed globally (`npm install -g pnpm`)
+- dotenvx installed globally (`npm install -g @dotenvx/dotenvx`)
+- protoc (Protocol Buffer Compiler) installed and added to PATH
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+git clone <repository-url>
+cd nestjsmicroservices
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2. Install dependencies
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 3. Set up environment variables
 
-## Resources
+Create a `.env` file in the root of the project:
 
-Check out a few resources that may come in handy when working with NestJS:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 4. Generate Prisma client
 
-## Support
+```bash
+dotenvx run -f .env -- pnpm prisma generate
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 5. Run database migrations
 
-## Stay in touch
+```bash
+dotenvx run -f .env -- pnpm prisma migrate dev
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 6. Generate Protobuf TypeScript types
 
-## License
+```bash
+pnpm proto:gen
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## Running the Services
+
+Each service must be started in a **separate terminal**. Always start the shared packages build first.
+
+### Build shared packages
+
+```bash
+pnpm nest build packages
+```
+
+### Start API Gateway
+
+```bash
+dotenvx run -f .env -- pnpm nest start nestjsmicroservices --watch
+```
+
+### Start User Service
+
+```bash
+dotenvx run -f .env -- pnpm nest start user-service --watch
+```
+
+### Start Wallet Service
+
+```bash
+dotenvx run -f .env -- pnpm nest start wallet-service --watch
+```
+
+> **Note:** Make sure all three services are running before making requests to the API Gateway.
+
+---
+
+## API Routes
+
+All requests go through the API Gateway at `http://localhost:3000`
+
+### Users
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST | `/users/create` | Create a new user |
+| GET | `/users/:id` | Get a user by ID |
+
+### Wallet
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| POST | `/wallet/create` | Create a wallet for a user |
+| GET | `/wallet/:id` | Get a wallet by ID |
+| POST | `/wallet/credit` | Credit a wallet |
+| POST | `/wallet/debit` | Debit a wallet |
+
+---
+
+## Example Requests
+
+### Create User
+
+```http
+POST http://localhost:3000/users/create
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "johndoe@gmail.com",
+}
+```
+
+**Response**
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "johndoe@gmail.com",
+  "createdAt": "2026-04-06T01:33:48.444Z"
+}
+```
+
+---
+
+### Get User by ID
+
+```http
+GET http://localhost:3000/users/1
+```
+
+**Response**
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "johndoe@gmail.com",
+  "createdAt": "2026-04-06T01:33:48.444Z"
+}
+```
+
+---
+
+### Create Wallet
+
+```http
+POST http://localhost:3000/wallet/create
+Content-Type: application/json
+
+{
+  "userId": 1
+}
+```
+
+**Response**
+
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "balance": 0,
+  "createdAt": "2026-04-06T01:33:48.444Z"
+}
+```
+
+---
+
+### Get Wallet by ID
+
+```http
+GET http://localhost:3000/wallet/1
+```
+
+**Response**
+
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "balance": 0,
+  "createdAt": "2026-04-06T01:33:48.444Z"
+}
+```
+
+---
+
+### Credit Wallet
+
+```http
+POST http://localhost:3000/wallet/credit
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "amount": 500
+}
+```
+
+**Response**
+
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "balance": 500,
+  "createdAt": "2026-04-06T01:33:48.444Z"
+}
+```
+
+---
+
+### Debit Wallet
+
+```http
+POST http://localhost:3000/wallet/debit
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "amount": 200
+}
+```
+
+**Response**
+
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "balance": 300,
+  "createdAt": "2026-04-06T01:33:48.444Z"
+}
+```
+
+---
+
+## Error Responses
+
+All errors follow this format:
+
+```json
+{
+  "statusCode": 404,
+  "message": "User not found",
+  "error": "Not Found"
+}
+```
+
+| Status Code | Meaning |
+|-------------|---------|
+| 400 | Bad Request — invalid input |
+| 404 | Not Found — resource does not exist |
+| 409 | Conflict — resource already exists |
+| 500 | Internal Server Error |
+
+---
+
+## Postman Collection
+
+> Add your Postman collection link or import badge here
+
+[![Run in Postman](https://run.pstmn.io/button.svg)]((https://planetary-shuttle-739649.postman.co/workspace/Assignment~1d0c3a28-8598-4c07-89d3-04f52e9c91e0/collection/27655412-077153ed-923e-49af-aed0-e4bde184d145?action=share&source=copy-link&creator=27655412))
+
+Or import the collection manually:
+1. Open Postman
+2. Click **Import**
+3. Paste the collection link or upload the JSON file
+
+---
+
+## Database Schema
+
+```prisma
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String
+  createdAt DateTime @default(now())
+  wallet Wallet?
+}
+
+model Wallet {
+  id        Int     @id @default(autoincrement())
+  userId    Int    @unique
+  balance   Float   @default(0)
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id])
+}
+```
+
+---
+
+## Common Issues
+
+**Services not connecting**
+Make sure all three services are running and the ports match what's configured in the gateway's `ClientsModule`.
+
+**Proto files not found**
+Run `nest build packages` before starting any service to ensure proto files are copied to the correct dist location.
+
+**Prisma client not found**
+Run `dotenvx run -f .env -- pnpm prisma generate` to regenerate the Prisma client after any schema changes.
+
+**Migration errors**
+Make sure your `DATABASE_URL` in `.env` is correct and the database is running before running migrations.
