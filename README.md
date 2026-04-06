@@ -15,7 +15,7 @@ gRPC calls
       ↓
 ┌─────────────────┬──────────────────┐
 User Service       Wallet Service
-port 3002          port 3003
+port 3002          port 3001
       ↓                  ↓
    Prisma DB          Prisma DB
 ```
@@ -72,7 +72,7 @@ nestjsmicroservices/
 
 ```bash
 git clone <repository-url>
-cd nestjsmicroservices
+cd micrpserviceswithnestjs
 ```
 
 ### 2. Install dependencies
