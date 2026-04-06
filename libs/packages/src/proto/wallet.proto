@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package wallet;
+// WalletService defines the gRPC service for managing wallet-related operations.
+service WalletService {
+    // CreateWallet creates a new wallet for a user with the provided details.
+    // Returns the created wallet's details, including its unique identifier.
+    // If the input data is invalid, returns an INVALID_ARGUMENT error.
+    // Ensures a user exists before creating a wallet, returning a NOT_FOUND error if the user does not exist.
+  rpc CreateWallet (CreateWalletRequest) returns (WalletResponse) {};
+   // GetWalletById retrieves a single wallet by its unique identifier.
+  // Returns the wallet details if found, or a NOT_FOUND error if the wallet does not exist.
+  rpc GetWalletById (GetWalletByIdRequest) returns (WalletResponse) {};
+  
+  // CreditWallet adds a specified amount to the wallet's balance.
+  // Returns the updated wallet details after the credit operation.
+  rpc CreditWallet (CreditWalletRequest) returns (WalletResponse) {};
+
+    // DebitWallet subtracts a specified amount from the wallet's balance.
+    // Returns the updated wallet details after the debit operation.
+    // If the wallet has insufficient funds for the debit operation, returns a FAILED_PRECONDITION
+  rpc DebitWallet (DebitWalletRequest) returns (WalletResponse) {};
+}
+
+
+message CreateWalletRequest {
+  int32 user_id = 1;
+}
+
+message WalletResponse {
+  int32 id = 1;
+  int32 user_id = 2;
+  double balance = 3;
+  string created_at = 4;
+}
+
+message GetWalletByIdRequest {
+    int32 id = 1;
+}
+
+message CreditWalletRequest {
+  int32 id = 1;
+  double amount = 2;
+}
+
+message DebitWalletRequest {
+  int32 id = 1;
+  double amount = 2;
+}

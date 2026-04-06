@@ -1,0 +1,31 @@
+syntax="proto3";
+
+package user;
+
+// UserService defines the gRPC service for managing user-related operations.
+service UserService {
+    // CreateUser creates a new user with the provided details.
+    // Returns the created user's details, including their unique identifier.
+    // If the input data is invalid, returns an INVALID_ARGUMENT error.
+  rpc CreateUser (CreateUserRequest) returns (UserResponse) {};
+   // GetUserById retrieves a single user by their unique identifier.
+  // Returns the user details if found, or a NOT_FOUND error if the user does not exist.
+  rpc GetUserbyId (GetUserbyIdRequest) returns (UserResponse) {};
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+}
+
+message UserResponse {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+  string created_at = 4;
+}
+
+message GetUserbyIdRequest {
+    int32 id = 1;
+}
+

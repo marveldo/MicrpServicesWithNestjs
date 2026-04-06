@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/nestjsmicroservices/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": false,
+    "tsConfigPath": "apps/nestjsmicroservices/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/nestjsmicroservices",
+  "projects": {
+    "nestjsmicroservices": {
+      "type": "application",
+      "root": "apps/nestjsmicroservices",
+      "entryFile": "main",
+      "sourceRoot": "apps/nestjsmicroservices/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/nestjsmicroservices/tsconfig.app.json",
+        "assets": [  
+          {
+            "include": "../../../libs/packages/src/proto/*.proto",
+            "outDir": "./dist/apps/nestjsmicroservices/libs/packages/src/",
+            "watchAssets": true
+          }
+        ]
+      }
+    },
+    "packages": {
+      "type": "library",
+      "root": "libs/packages",
+      "entryFile": "index",
+      "sourceRoot": "libs/packages/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/packages/tsconfig.lib.json"
+      }
+    },
+    "user-service": {
+      "type": "application",
+      "root": "apps/user-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/user-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/user-service/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "../../../libs/packages/src/proto/*.proto",
+            "outDir": "./dist/apps/user-service/libs/packages/src/",
+            "watchAssets": true
+          },
+          {
+        "include": "../../../libs/packages/src/generated/**/*",
+        "outDir": "./dist/apps/user-service/libs/packages/src/",  
+        "watchAssets": true
+      }
+        ]
+      }
+    },
+    "wallet-service": {
+      "type": "application",
+      "root": "apps/wallet-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/wallet-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/wallet-service/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "../../../libs/packages/proto/*.proto",
+            "outDir": "./dist/apps/wallet-service/libs/packages/src/",
+            "watchAssets": true
+          },
+          {
+        "include": "../../../libs/packages/src/generated/**/*",
+        "outDir": "./dist/apps/wallet-service/libs/packages/src/",  
+        "watchAssets": true
+      }
+        ]
+      }
+    }
+  }
+}
