@@ -3,29 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule , Transport } from '@nestjs/microservices';
 import { join } from 'path';
+import { UsersModule } from './users/users.module';
+import { WalletModule } from './wallet/wallet.module';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-     name: "USER_PACKAGE",
-     transport: Transport.GRPC,  
-     options: {
-      package: 'user',
-      protoPath: join(__dirname, '../../../libs/packages/src/proto/user.proto'),
-      url: 'localhost:3002'
-    }
-   },
-   {
-      name: "WALLET_PACKAGE",
-      transport: Transport.GRPC,  
-      options: {
-       package: 'wallet',
-        protoPath: join(__dirname, '../../../libs/packages/src/proto/wallet.proto'),
-        url: 'localhost:3001'
-     }
-   }
-    ])
+    UsersModule,
+    WalletModule
   ],
   controllers: [AppController],
   providers: [AppService],
