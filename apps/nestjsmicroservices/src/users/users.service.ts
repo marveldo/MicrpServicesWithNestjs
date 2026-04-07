@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
 import { USER_SERVICE_NAME , UserServiceClient} from '@app/packages/proto/user.pb';
-import { CreateUserType, CreateWalletType } from '@app/packages';
+import { CreateUserType } from '@app/packages';
 import { catchError } from 'rxjs';
 import { handleGrpcError } from '@app/packages';
 
