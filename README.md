@@ -101,23 +101,13 @@ dotenvx run -f .env -- pnpm prisma generate
 dotenvx run -f .env -- pnpm prisma migrate dev
 ```
 
-### 6. Generate Protobuf TypeScript types
-
-```bash
-pnpm proto:gen
-```
 
 ---
 
 ## Running the Services
 
-Each service must be started in a **separate terminal**. Always start the shared packages build first.
+Each service must be started in a **separate terminal**.
 
-### Build shared packages
-
-```bash
-pnpm nest build packages
-```
 
 ### Start API Gateway
 
